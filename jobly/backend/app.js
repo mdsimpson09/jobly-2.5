@@ -1,7 +1,7 @@
 "use strict";
 
 /** Express app for jobly. */
-
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 
