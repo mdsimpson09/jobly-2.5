@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
-  const BASE_URL = `postgres://Marli@localhost:5432/jobly`
+const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
+  // const BASE_URL = `postgres://Marli@localhost:5432/jobly` || "http://localhost:3001";
 
 
 /** API Class.
@@ -14,7 +14,7 @@ import axios from "axios";
 
 class JoblyApi {
   // the token for interactive with the API will be stored here.
-  static token;
+  token = "";
 
   static async request(endpoint, data = {}, method = "get") {
     console.debug("API Call:", endpoint, data, method);
@@ -34,8 +34,46 @@ class JoblyApi {
     }
   }
 
+  
   // Individual API routes
 
+ /** Signup for site. */
+ static async signup(data) {
+  let res = await this.request(`auth/register`, data, "post");
+  // Get token from response
+  let token = res.token; 
+  // Set token 
+  JoblyApi.token = token;
+  return token;
+}
+// static async signup(data) {
+//   try {
+//     let res = await this.request("auth/register", data, "post");
+//     return res.data.token; // Assuming that the token is returned as part of the response data
+//   } catch (error) {
+//     console.error("signup failed", error);
+//     throw new Error("Signup request failed");
+//   }
+// }
+
+// static async signup(data) {
+//   let res = await this.request(`auth/register`, data, "post");
+//   return res.token;
+// }
+
+  /** Get token for login from username, password. */
+
+  static async login(data) {
+    let res = await this.request(`auth/token`, data, "post");
+    let token = res.token;
+    JoblyApi.token = token;
+    return token;
+  }
+
+  // static async login(data) {
+  //   let res = await this.request(`auth/token`, data, "post");
+  //   return res.token;
+  // }
   /** Get the current user. */
 
   static async getCurrentUser(username) {
@@ -70,29 +108,6 @@ class JoblyApi {
     await this.request(`users/${username}/jobs/${id}`, {}, "post");
   }
 
-  /** Get token for login from username, password. */
-
-  static async login(data) {
-    let res = await this.request(`auth/token`, data, "post");
-    return res.token;
-  }
-
-  /** Signup for site. */
-
-  static async signup(data) {
-    try {
-      let res = await this.request("auth/register", data, "post");
-      return res.data.token; // Assuming that the token is returned as part of the response data
-    } catch (error) {
-      console.error("signup failed", error);
-      throw new Error("Signup request failed");
-    }
-  }
-
-  // static async signup(data) {
-  //   let res = await this.request(`auth/register`, data, "post");
-  //   return res.token;
-  // }
 
   /** Save user profile page. */
 

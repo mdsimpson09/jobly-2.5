@@ -2,6 +2,9 @@
 
 /** Express app for jobly. */
 require('dotenv').config();
+const corsMiddleware = require('./middleware/cors');
+
+
 const express = require("express");
 const cors = require("cors");
 
@@ -17,6 +20,7 @@ const morgan = require("morgan");
 
 const app = express();
 
+app.use(corsMiddleware);
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
